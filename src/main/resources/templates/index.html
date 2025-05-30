@@ -3,16 +3,16 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
-<html>
-    <head>
-        <title>TechShop</title>
-        <meta charset="UTF-8"/>
-    </head>
-    <body>
-        <h1 style="text-align: center;background-color: blue;color: white"> TechShop </h1>
-        <a href="/">TechShop</a>|<a href="/ejemplo2">Mis Autos</a>
-        <h2>Su tienda en línea</h2>
-        <p>El mejor lugar para comprar productos de tecnología del planeta...</p>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}"/>
         
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+           
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+            
     </body>
 </html>
