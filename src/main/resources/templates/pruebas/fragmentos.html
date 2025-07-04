@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Techshop</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="tabsCategorias">
+            <ul class="nav nav-tabs">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/pruebas/listado">[[#{pruebas.todas}]]</a>
+                </li>
+                <li th:each="c : ${categorias}" class="nav-item">
+                    <a class="nav-link" th:href="@{/pruebas/listado/}+${c.idCategoria}">[[#{c.descripcion}]]</a>
+                </li>               
+            </ul>
+        </section>
+
+        <section th:fragment="tarjetas">
+            <div class="row row-cols-4">
+                <div th:each="p : ${productos}"
+                    class="card p-3">
+                    <figure>
+                        <div class="d-flex justify-content-center">
+                            <img th:src="${p.rutaImagen}" alt="..." height="200"/>
+                        </div>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>
