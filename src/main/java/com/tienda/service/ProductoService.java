@@ -49,23 +49,28 @@ public class ProductoService {
             productoRepository.delete(producto);
             productoRepository.flush();
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
-    
+
     @Transactional(readOnly = true)
-    public List<Producto> consultaAmpliada(double precioInf, double precioSup){
+    public List<Producto> consultaAmpliada(double precioInf, double precioSup) {
         return productoRepository.findByPrecioBetweenOrderByPrecio(precioInf, precioSup);
     }
-    
+
     @Transactional(readOnly = true)
-    public List<Producto> consultaJPQL(double precioInf, double precioSup){
+    public List<Producto> consultaJPQL(double precioInf, double precioSup) {
         return productoRepository.consultaJPQL(precioInf, precioSup);
     }
-    
+
     @Transactional(readOnly = true)
-    public List<Producto> consultaSQL(double precioInf, double precioSup){
+    public List<Producto> consultaSQL(double precioInf, double precioSup) {
         return productoRepository.consultaSQL(precioInf, precioSup);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosConExistenciasMenoresA(int cantidad) {
+        return productoRepository.findByExistenciasLessThan(cantidad);
     }
 }

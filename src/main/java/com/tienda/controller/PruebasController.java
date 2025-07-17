@@ -45,8 +45,8 @@ public class PruebasController {
 
     @GetMapping("/listado/{idCategoria}")
     public String listado(Categoria categoria, Model model) {
-        categoria=categoriaService.getCategoria(categoria);
-        
+        categoria = categoriaService.getCategoria(categoria);
+
         var lista = categoria.getProductos();
         model.addAttribute("productos", lista);
 
@@ -55,7 +55,7 @@ public class PruebasController {
 
         return "/pruebas/listado";
     }
-    
+
     @GetMapping("/listado2")
     public String listado2(Model model) {
 
@@ -64,7 +64,7 @@ public class PruebasController {
 
         return "/pruebas/listado2";
     }
-    
+
     @PostMapping("/query1")
     public String query1(@RequestParam() double precioInf,
             @RequestParam() double precioSup,
@@ -75,6 +75,7 @@ public class PruebasController {
         model.addAttribute("productoSup", precioSup);
         return "/pruebas/listado2";
     }
+
     @PostMapping("/query2")
     public String query2(@RequestParam() double precioInf,
             @RequestParam() double precioSup,
@@ -85,6 +86,7 @@ public class PruebasController {
         model.addAttribute("productoSup", precioSup);
         return "/pruebas/listado2";
     }
+
     @PostMapping("/query3")
     public String query3(@RequestParam() double precioInf,
             @RequestParam() double precioSup,
@@ -93,6 +95,20 @@ public class PruebasController {
         model.addAttribute("productos", lista);
         model.addAttribute("productoInf", precioInf);
         model.addAttribute("productoSup", precioSup);
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/queryInventario")
+    public String consultarPorInventario(
+            @RequestParam("maxCantidad") int maxCantidad,
+            Model model) {
+
+        var productos = productoService.getProductosConExistenciasMenoresA(maxCantidad);
+        var categorias = categoriaService.getCategorias(true);
+
+        model.addAttribute("productos", productos);
+        model.addAttribute("categorias", categorias);
+
         return "/pruebas/listado2";
     }
 }

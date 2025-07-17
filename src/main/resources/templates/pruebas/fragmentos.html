@@ -70,17 +70,17 @@
                                        min="0" class="form-control"
                                        th:value="${precioSup}" required="true"/>
                             </div>
-                            
+
                         </div>
                         <div class="card-footer text-center text-white">
                             <button type="submit"
-                                class="btn btn-primary">
+                                    class="btn btn-primary">
                                 <i class="fa-solid fa-magnifying-glass"></i> [[#{pruebas.ampliadas}]]
                             </button>
                         </div>
                     </div>
                 </form>
-                
+
                 <form th:action="@{/pruebas/query2}"
                       method="post">
                     <div class="card p-2">
@@ -100,17 +100,17 @@
                                        min="0" class="form-control"
                                        th:value="${precioSup}" required="true"/>
                             </div>
-                            
+
                         </div>
                         <div class="card-footer text-center">
                             <button type="submit"
-                                class="btn btn-info text-white">
+                                    class="btn btn-info text-white">
                                 <i class="fa-solid fa-magnifying-glass"></i> [[#{pruebas.jpql}]]
                             </button>
                         </div>
                     </div>
                 </form>
-                
+
                 <form th:action="@{/pruebas/query3}"
                       method="post">
                     <div class="card p-2">
@@ -130,16 +130,36 @@
                                        min="0" class="form-control"
                                        th:value="${precioSup}" required="true"/>
                             </div>
-                            
+
                         </div>
                         <div class="card-footer text-center">
                             <button type="submit"
-                                class="btn btn-success text-white">
+                                    class="btn btn-success text-white">
                                 <i class="fa-solid fa-magnifying-glass"></i> [[#{pruebas.nativo}]]
                             </button>
                         </div>
                     </div>
                 </form>
+
+                <form th:action="@{/pruebas/queryInventario}" method="post">
+                    <div class="card p-2">
+                        <div class="card-header text-center bg-warning text-dark">
+                            <h5>[[#{consultas.inventario}]]</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label>[[#{i.maximo}]]</label>
+                                <input type="number" name="maxCantidad" min="0" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button class="btn btn-warning" type="submit">
+                                <i class="fas fa-search"></i> [[#{consultas.inventario}]]
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
         </section>
     </body>
