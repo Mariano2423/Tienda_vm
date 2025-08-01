@@ -4,14 +4,18 @@
  */
 package com.tienda;
 
+import com.tienda.domain.Ruta;
+import com.tienda.service.RutaPermitService;
+import com.tienda.service.RutaService;
+import java.util.List;
 import java.util.Locale;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,7 +31,8 @@ import org.thymeleaf.templatemode.TemplateMode;
  * @author maria
  */
 @Configuration
-public class ProyectConfig implements WebMvcConfigurer{
+public class ProyectConfig implements WebMvcConfigurer {
+
     /* Los siguiente métodos son para implementar el tema de seguridad dentro del proyecto */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -37,9 +42,9 @@ public class ProyectConfig implements WebMvcConfigurer{
         registry.addViewController("/iframes").setViewName("iframes");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/registro/nuevo").setViewName("/registro/nuevo");
-        
+
     }
-    
+
     /* El siguiente método se utilizar para publicar en la nube, independientemente  */
     @Bean
     public SpringResourceTemplateResolver templateResolver_0() {
@@ -51,8 +56,7 @@ public class ProyectConfig implements WebMvcConfigurer{
         resolver.setCheckExistence(true);
         return resolver;
     }
-    
-    
+
     @Bean
     public LocaleResolver localeResolver() {
         var slr = new SessionLocaleResolver();
@@ -73,41 +77,35 @@ public class ProyectConfig implements WebMvcConfigurer{
     public void addInterceptors(InterceptorRegistry registro) {
         registro.addInterceptor(localeChangeInterceptor());
     }
-    
+
+    @Autowired
+    private RutaService rutaService;
+    @Autowired
+    private RutaPermitService RutaPermitService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((request) -> request
-                .requestMatchers("/","/index","/errores/**",
-                        "/carrito/**","/pruebas/**","/reportes/**",
-                        "/registro/**","/js/**","/webjars/**")
-                        .permitAll()
-                .requestMatchers(
-                        "/producto/nuevo","/producto/guardar",
-                        "/producto/modificar/**","/producto/eliminar/**",
-                        "/categoria/nuevo","/categoria/guardar",
-                        "/categoria/modificar/**","/categoria/eliminar/**",
-                        "/usuario/nuevo","/usuario/guardar",
-                        "/usuario/modificar/**","/usuario/eliminar/**",
-                        "/reportes/**"
-                ).hasRole("ADMIN")
-                .requestMatchers(
-                        "/producto/listado",
-                        "/categoria/listado",
-                        "/usuario/listado"
-                ).hasAnyRole("ADMIN", "VENDEDOR")
-                .requestMatchers("/facturar/carrito")
-                .hasRole("USER")
-                )
-                .formLogin((form) -> form
-                .loginPage("/login").permitAll())
+        String[] rutasPermit = RutaPermitService.getRutaPermitsString();
+        List<Ruta> rutas = rutaService.getRutas();
+
+        http.authorizeHttpRequests((request) -> {
+            request.requestMatchers(rutasPermit).permitAll();
+            for (Ruta ruta : rutas) {
+                request.requestMatchers("/producto/nuevo").hasRole("ADMIN")
+                        .hasRole(ruta.getRolName());
+            }
+        }
+        )
+                .formLogin(form) -> form
+                .loginPage("/login").permitAll()
+        )
                 .logout((logout) -> logout.permitAll());
         return http.build();
     }
- 
-/* El siguiente método se utiliza para completar la clase no es 
-    realmente funcional, la próxima semana se reemplaza con usuarios de BD */    
-    @Bean
+
+    /* El siguiente método se utiliza para completar la clase no es 
+    realmente funcional, la próxima semana se reemplaza con usuarios de BD */
+ /* @Bean
     public UserDetailsService users() {
         UserDetails admin = User.builder()
                 .username("juan")
@@ -125,5 +123,15 @@ public class ProyectConfig implements WebMvcConfigurer{
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(user, sales, admin);
+    }*/
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    public void configurerGlobal(AuthenticationManagerBuilder build)
+            throws Exception {
+        build.userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
+
 }

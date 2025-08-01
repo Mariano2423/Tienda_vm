@@ -33,7 +33,8 @@
                             <form>
                                 <input type="hidden" name="idProdcuto" th:value="${p.idProducto}"/>
                                 <input type="hidden" name="existencias" th:value="${p.existencias}"/>
-                                <button class="btn btn-light"
+                                <button type="button"
+                                        class="btn btn-light"
                                         onclick="addCart(this.form)">
                                     <i class="fas fa-cart-arrow-down"></i>
                                 </button>
