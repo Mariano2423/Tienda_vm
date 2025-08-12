@@ -2,6 +2,7 @@ package com.tienda.controller;
 
 import com.tienda.domain.Item;
 import com.tienda.domain.Producto;
+import com.tienda.service.ConstanteService;
 import com.tienda.service.ItemService;
 import com.tienda.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,18 @@ public class CarritoController {
     private ItemService itemService;
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private ConstanteService constanteService;
 
     @GetMapping("/carrito/listado")
     public String listado(Model model) {
         var lista = itemService.getItems();
         model.addAttribute("items", lista);
+        var totalVenta=itemService.getTotal();
         model.addAttribute("carritoTotal", itemService.getTotal());
+        double tCambio=Double.parseDouble(constanteService.getValorDeAtributo("dolar"));
+        model.addAttribute("totalDolares", (double) (Math.round(totalVenta/tCambio*100))/100);
+        model.addAttribute("precioDolar", tCambio);
         return "/carrito/listado";
     }
 

@@ -19,7 +19,7 @@
         </div>     
 
         <section th:fragment="listadoCarrito" id="items">          
-            <div class="row">
+            <div class="row m-5">
                 <div class="col-md-9">
                     <div class="card">
                         <div class="card-header">
@@ -70,9 +70,9 @@
                     <div class="card text-center bg-primary text-white mb-3">
                         <div class="card-body">
                             <h3>[[#{carrito.totalCompra}]]</h3>
-                            <h4 class="fs-4">
-                                [[${carritoTotal}]]
-                            </h4>
+                            <h4> <i class="fa-solid fa-colon-sing"></i>[[${#numbers.formatDecimal(carritoTotal,1,'DEFAULT',2,'DEFAULT')}]]</h4>
+                            <h4> <i class="fa-solid fa-dollar-sing"></i>[[${#numbers.formatDecimal(totalDolares,1,'DEFAULT',2,'DEFAULT')}]]</h4>
+                            <h5>$1.00=[[${#numbers.formatDecimal(precioDolar,1,'DEFAULT',2,'DEFAULT')}]]</h5>
                         </div>
                     </div>
                     <div class="card text-center bg-success text-white mb-3">
