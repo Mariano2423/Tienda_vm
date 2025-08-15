@@ -33,5 +33,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 setTimeout(() => {
-        document.querySelectorAll('.toast').forEach(t => t.classList.remove('show'));
-    }, 3000);
+       document.querySelectorAll('.toast').forEach(t => t.classList.remove('show'));
+  }, 3000);

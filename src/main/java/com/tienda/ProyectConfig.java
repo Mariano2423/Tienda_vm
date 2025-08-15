@@ -37,9 +37,7 @@ public class ProyectConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
-        registry.addViewController("/ejemplo2").setViewName("ejemplo2");
-        registry.addViewController("/multimedia").setViewName("multimedia");
-        registry.addViewController("/iframes").setViewName("iframes");
+        registry.addViewController("/listado").setViewName("listado");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/registro/nuevo").setViewName("/registro/nuevo");
 
@@ -85,20 +83,26 @@ public class ProyectConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         String[] rutasPermit = RutaPermitService.getRutaPermitsString();
         List<Ruta> rutas = rutaService.getRutas();
 
-        http.authorizeHttpRequests((request) -> {
-            request.requestMatchers(rutasPermit).permitAll();
-            for (Ruta ruta : rutas) {
-                request.requestMatchers("/producto/nuevo").hasRole("ADMIN")
+        http
+                .authorizeHttpRequests((request) -> {
+                    request.requestMatchers(rutasPermit).permitAll();
+
+                    for (Ruta ruta : rutas) {
+
+                        request.requestMatchers(ruta.getPatron())
                         .hasRole(ruta.getRolName());
-            }
-        }
-        )
-                .formLogin(form) -> form
-                .loginPage("/login").permitAll()
-        )
+                        
+                    }
+                    
+                }
+                        
+                )
+                .formLogin((form) -> form
+                .loginPage("/login").permitAll())
                 .logout((logout) -> logout.permitAll());
         return http.build();
     }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}"/>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <div class="container py-4">
+            <h3>Reporte: Inventario bajo</h3>
+
+            <form class="row g-3 mb-3" th:action="@{/reportes/inventario}" method="get">
+                <div class="col-auto">
+                    <label class="form-label mb-0">Umbral</label>
+                    <input type="number" class="form-control" name="umbral" th:value="${umbral}">
+                </div>
+                <div class="col-auto">
+                    <label class="form-label mb-0">Categoría</label>
+                    <select class="form-select" name="idCategoria">
+                        <option th:selected="${idCategoria == null}" value="">Todas</option>
+                        <option th:each="c : ${categorias}"
+                                th:value="${c[0]}"
+                                th:selected="${idCategoria != null and idCategoria == c[0]}"
+                                th:text="${c[1]}">Cat</option>
+                    </select>
+                </div>
+                <div class="col-auto align-self-end">
+                    <button class="btn btn-primary" type="submit">Filtrar</button>
+
+                    <!-- Link CSV sin idCategoria -->
+                    <a class="btn btn-outline-secondary"
+                       th:if="${idCategoria == null}"
+                       th:href="@{|/reportes/inventario/csv?umbral=${umbral}|}">Exportar CSV</a>
+
+                    <!-- Link CSV con idCategoria -->
+                    <a class="btn btn-outline-secondary"
+                       th:if="${idCategoria != null}"
+                       th:href="@{|/reportes/inventario/csv?umbral=${umbral}&idCategoria=${idCategoria}|}">Exportar CSV</a>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Producto</th><th>Categoría</th>
+                            <th class="text-end">Existencias</th>
+                            <th class="text-end">Precio</th>
+                            <th class="text-end">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${data}">
+                        <td th:text="${r[0]}">1</td>
+                        <td th:text="${r[1]}">Prod</td>
+                        <td th:text="${r[2]}">Cat</td>
+                        <td class="text-end" th:text="${r[3]}">0</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(r[4],1,2)}">0.00</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(r[5],1,2)}">0.00</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="5" class="text-end">Total inventario bajo</th>
+                            <th class="text-end" th:text="${#numbers.formatDecimal(totalValor,1,2)}">0.00</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>

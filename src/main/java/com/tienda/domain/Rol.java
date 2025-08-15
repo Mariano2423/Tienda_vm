@@ -6,7 +6,6 @@ package com.tienda.domain;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 import lombok.Data;
 
 

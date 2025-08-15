@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}"/>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <div class="container py-4">
+            <h3>Reporte: Ventas por rango</h3>
+
+            <form class="row g-3 mb-3" th:action="@{/reportes/ventas}" method="get">
+                <div class="col-auto">
+                    <label class="form-label mb-0">Desde</label>
+                    <input type="date" class="form-control" name="desde"
+                           th:value="${#dates.format(desde, 'yyyy-MM-dd')}" required>
+                </div>
+                <div class="col-auto">
+                    <label class="form-label mb-0">Hasta</label>
+                    <input type="date" class="form-control" name="hasta"
+                           th:value="${#dates.format(hasta, 'yyyy-MM-dd')}" required>
+                </div>
+                <div class="col-auto align-self-end">
+                    <button class="btn btn-primary" type="submit">Filtrar</button>
+                    <a class="btn btn-outline-secondary"
+                       th:href="@{|/reportes/ventas/csv?desde=${#dates.format(desde,'yyyy-MM-dd')}&hasta=${#dates.format(hasta,'yyyy-MM-dd')}|}">
+                       Exportar CSV
+                    </a>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Producto</th>
+                            <th class="text-end">Unidades</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${data}">
+                        <td th:text="${r[0]}">1</td>
+                        <td th:text="${r[1]}">Prod</td>
+                        <td class="text-end" th:text="${r[2]}">0</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(r[3],1,2)}">0.00</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" class="text-end">Totales</th>
+                            <th class="text-end" th:text="${totalUnidades}">0</th>
+                            <th class="text-end" th:text="${#numbers.formatDecimal(totalMonto,1,2)}">0.00</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>
